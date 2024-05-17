@@ -18,13 +18,13 @@ namespace ConsoleApp1
             Console.WriteLine(args[0]);
             ITelegramBotClient bot = new TelegramBotClient(token: args[0]);
 
-            var buyButton = new ReplyKeyboardMarkup(new KeyboardButton("Купить"));
-            buyButton.ResizeKeyboard = true;
+var buyButton = new ReplyKeyboardMarkup(new KeyboardButton("Купить"));
+buyButton.ResizeKeyboard = true;
 
-            var _updateHandler = new UpdateHandler(
-            new MessageHandler(
-            new List<IAnswer>
-            {
+var _updateHandler = new UpdateHandler(
+new MessageHandler(
+new List<IAnswer>
+{
 new TextToTextAnswer(
 new TextAnswerMessage("Нажмите кнопку 'Купить', чтобы приобрести доступ", buyButton),
 "/start"),
@@ -34,34 +34,34 @@ new IEnumerable<InlineKeyboardButton>[]
 {
 new InlineKeyboardButton[]
 {
-InlineKeyboardButton.WithCallbackData("Канал 1", "Channel1Button"),
+InlineKeyboardButton.WithCallbackData("TOP F-CONTENT PRICE 50%", "Channel1Button"),
 },
 new InlineKeyboardButton[]
 {
-InlineKeyboardButton.WithCallbackData("Канал 2", "Channel2Button"),
+InlineKeyboardButton.WithCallbackData("EasyCum PRICE 50%", "Channel2Button"),
 },
 new InlineKeyboardButton[]
 {
-InlineKeyboardButton.WithCallbackData("Канал 3", "Channel3Button"),
+InlineKeyboardButton.WithCallbackData("F-Team PRICE 50%", "Channel3Button"),
 },
 new InlineKeyboardButton[]
 {
-InlineKeyboardButton.WithCallbackData("Канал 4", "Channel4Button"),
+InlineKeyboardButton.WithCallbackData("Right Person PRICE 50%", "Channel4Button"),
 },
 new InlineKeyboardButton[]
 {
-InlineKeyboardButton.WithCallbackData("Канал 5", "Channel5Button"),
+InlineKeyboardButton.WithCallbackData("PronHero", "Channel5Button"),
 },
 new InlineKeyboardButton[]
 {
-InlineKeyboardButton.WithCallbackData("Канал 6", "Channel6Button"),
+InlineKeyboardButton.WithCallbackData("PronMaster PRICE 50%", "Channel6Button"),
 },
 })),
 "Купить"),
 new TextToTextAnswer(
 new TextAnswerMessage("Sergay"),
 "Gay")
-            }),
+}),
             new SendHandler(),
             new EditMessageHandler(),
             new CryptoPayClient(args[1]),

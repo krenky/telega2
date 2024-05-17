@@ -16,4 +16,10 @@
     <ProjectReference Include="..\TelegramBotLibrary\TelegramBotLibrary.csproj" />
   </ItemGroup>
 
+    <ItemGroup>
+    <None Update="usersdata.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
