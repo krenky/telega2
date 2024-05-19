@@ -57,9 +57,11 @@ namespace TelegramBotLibrary.Handlers
             }
             catch (Exception ex)
             {
+				Console.WriteLine(ex.Message);
 				if (update.Message != null)
 				{
 					await botClient.SendTextMessageAsync(update.Message.Chat, "/start");
+					
 				}
 
 				if (update.CallbackQuery != null)
