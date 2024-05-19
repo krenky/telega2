@@ -1,6 +1,5 @@
 ﻿using CryptoPay;
 using Microsoft.Data.Sqlite;
-using Microsoft.Extensions.Logging;
 using System.Security.Cryptography;
 using System.Threading;
 using Telegram.Bot;
@@ -13,6 +12,7 @@ using TelegramBotLibrary.Answers;
 using TelegramBotLibrary.Answers.Interface;
 using TelegramBotLibrary.Constants;
 using TelegramBotLibrary.Handlers.Interface;
+using System.Text.Json;
 
 namespace TelegramBotLibrary.Handlers
 {
@@ -24,20 +24,18 @@ namespace TelegramBotLibrary.Handlers
         IMessageHandler _messageHandler;
         ISendHandler _sendHandler;
 		IEditMessageHandler _editHandler;
-        ILogger _logger;
 
 		private CryptoPayClient _cryptoPayClient;
 		private string _connectionString;
 
-		public UpdateHandler(IMessageHandler messageHandler, ISendHandler sendHandler, IEditMessageHandler editMessageHandler, ILogger logger = null)
+		public UpdateHandler(IMessageHandler messageHandler, ISendHandler sendHandler, IEditMessageHandler editMessageHandler)
         {
             MessageHandler = messageHandler ?? throw new ArgumentNullException(nameof(messageHandler));
             SendHandler = sendHandler;
 			EditHandler = editMessageHandler;
-            Logger = logger/* ?? throw new ArgumentNullException(nameof(logger))*/;
         }
 
-		public UpdateHandler(IMessageHandler messageHandler, ISendHandler sendHandler, IEditMessageHandler editMessageHandler, CryptoPayClient cryptoPayClient, string connectionString, ILogger logger = null)
+		public UpdateHandler(IMessageHandler messageHandler, ISendHandler sendHandler, IEditMessageHandler editMessageHandler, CryptoPayClient cryptoPayClient, string connectionString)
 			: this(messageHandler, sendHandler, editMessageHandler)
 		{
 			_cryptoPayClient = cryptoPayClient ?? throw new ArgumentNullException(nameof(cryptoPayClient));
@@ -47,12 +45,12 @@ namespace TelegramBotLibrary.Handlers
 		public IMessageHandler MessageHandler { get => _messageHandler; set => _messageHandler = value; }
         public ISendHandler SendHandler { get => _sendHandler; set => _sendHandler = value; }
 		public IEditMessageHandler EditHandler { get => _editHandler; set => _editHandler = value; }
-		public ILogger Logger { get => _logger; set => _logger = value; }
         
         public virtual async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
         {
             try
             {
+				Console.WriteLine(JsonSerializer.Serialize(update));
 				await OnUserAction(botClient, update, cancellationToken);
             }
             catch (Exception ex)
@@ -88,7 +86,7 @@ namespace TelegramBotLibrary.Handlers
 					break;
 
 				default:
-					Logger.LogInformation("Вызван неподерживаемый тип update", update.Type);
+					//Logger.LogInformation("Вызван неподерживаемый тип update", update.Type);
 
 					break;
 			}
