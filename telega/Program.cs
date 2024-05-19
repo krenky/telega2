@@ -1,4 +1,4 @@
-﻿using CryptoPay;
+using CryptoPay;
 using System.Configuration;
 using Telegram.Bot;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -15,6 +15,7 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
+            var pathDb = Path.Combine("usersdata.db");
             Console.WriteLine(args[0]);
             ITelegramBotClient bot = new TelegramBotClient(token: args[0]);
 
@@ -65,7 +66,7 @@ new TextAnswerMessage("Sergay"),
             new SendHandler(),
             new EditMessageHandler(),
             new CryptoPayClient(args[1]),
-            "Data Source = usersdata.db");
+           $@"Data Source = {pathDb}");
             TelegramBot botic = new TelegramBot(bot, _updateHandler);
             botic.Start();
         }
