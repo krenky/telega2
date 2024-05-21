@@ -1,4 +1,4 @@
-﻿using CryptoPay;
+using CryptoPay;
 using System.Configuration;
 using Telegram.Bot;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -15,12 +15,12 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            var connectionString = "Host=localhost;Port=5432;Database=pornStore;Username=postgres;Password=зpostgres;";
+            var connectionString = args[3];
 
 			//var pathDb = "/" + Path.Combine("home", "keykm","usersdata.db");
             //Console.WriteLine(pathDb);
             //Console.WriteLine(args[0]);
-            ITelegramBotClient bot = new TelegramBotClient("7015770120:AAEmoCrQUK0p3JNcTYKZufVd6moFLbCYbzA");
+            ITelegramBotClient bot = new TelegramBotClient(args[0]);
 
 var buyButton = new ReplyKeyboardMarkup(new KeyboardButton("Купить"));
 buyButton.ResizeKeyboard = true;
@@ -68,7 +68,7 @@ new TextAnswerMessage("Sergay"),
 }),
             new SendHandler(),
             new EditMessageHandler(),
-            new CryptoPayClient("168281:AALGMXN9Kn6oMQ8967JTQJFZXCX4PiAEVaQ"),
+            new CryptoPayClient(args[1]),
 		    connectionString);
             TelegramBot botic = new TelegramBot(bot, _updateHandler);
             botic.Start();
