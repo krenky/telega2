@@ -15,7 +15,7 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            var connectionString = args[3];
+            var connectionString = args[2];
 
 			//var pathDb = "/" + Path.Combine("home", "keykm","usersdata.db");
             //Console.WriteLine(pathDb);
