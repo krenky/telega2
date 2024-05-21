@@ -13,6 +13,7 @@ using TelegramBotLibrary.Answers.Interface;
 using TelegramBotLibrary.Constants;
 using TelegramBotLibrary.Handlers.Interface;
 using System.Text.Json;
+using Npgsql;
 
 namespace TelegramBotLibrary.Handlers
 {
@@ -126,7 +127,7 @@ namespace TelegramBotLibrary.Handlers
 					break;
 
 				case "CryptoBotButton":
-					using (var connection = new SqliteConnection(_connectionString))
+					using (var connection = new NpgsqlConnection(_connectionString))
 					{
 						try
 						{
@@ -145,7 +146,7 @@ namespace TelegramBotLibrary.Handlers
 					break;
 
 				case "PaidButton":
-					using (var connection = new SqliteConnection(_connectionString))
+					using (var connection = new NpgsqlConnection(_connectionString))
 					{
 						try
 						{
@@ -188,7 +189,7 @@ namespace TelegramBotLibrary.Handlers
 
 		private void OnChannelClick(Update update)
 		{
-			using (var connection = new SqliteConnection(_connectionString))
+			using (var connection = new NpgsqlConnection(_connectionString))
 			{
 				try { 
 					connection.Open();
@@ -196,7 +197,7 @@ namespace TelegramBotLibrary.Handlers
 					var query = IsUserExist(update.CallbackQuery.From.Username)
 						? SqlQueries.UpdateBuyer
 						: SqlQueries.InsertBuyer;
-					var command = new SqliteCommand(query, connection);
+					var command = new NpgsqlCommand(query, connection);
 
 					command.Parameters.AddWithValue("@Username", update.CallbackQuery.From.Username);
 					command.Parameters.AddWithValue("@ChannelName", update.CallbackQuery.Data);
@@ -211,18 +212,18 @@ namespace TelegramBotLibrary.Handlers
 
 		private bool IsUserExist(string username)
 		{
-			using (var connection = new SqliteConnection(_connectionString))
+			using (var connection = new NpgsqlConnection(_connectionString))
 			{
 				connection.Open();
 
-				var command = new SqliteCommand(SqlQueries.SelectBuyer, connection);
+				var command = new NpgsqlCommand(SqlQueries.SelectBuyer, connection);
 				command.Parameters.AddWithValue("@Username", username);
 
 				return command.ExecuteReader().HasRows;
 			}
 		}
 
-		private async Task<IAnswer> CryptoBotClick(SqliteConnection connection, Update update)
+		private async Task<IAnswer> CryptoBotClick(NpgsqlConnection connection, Update update)
 		{
 			var cost = GetChannelCost(connection, update);
 			var invoice = await _cryptoPayClient.CreateInvoiceAsync(cost, CryptoPay.Types.CurrencyTypes.crypto, "USDT");
@@ -246,26 +247,26 @@ namespace TelegramBotLibrary.Handlers
 			return checkPayButton;
 		}
 
-		private double GetChannelCost(SqliteConnection connection, Update update)
+		private double GetChannelCost(NpgsqlConnection connection, Update update)
 		{
-			var command = new SqliteCommand(SqlQueries.SelectCostChannelByUsername, connection);
+			var command = new NpgsqlCommand(SqlQueries.SelectCostChannelByUsername, connection);
 			command.Parameters.AddWithValue("@Username", update.CallbackQuery.From.Username);
 
 			return Convert.ToDouble(command.ExecuteScalar());
 		}
 
-		private void UpdateInvoicedId(SqliteConnection connection, CryptoPay.Types.Invoice invoice, string username)
+		private void UpdateInvoicedId(NpgsqlConnection connection, CryptoPay.Types.Invoice invoice, string username)
 		{
-			var command = new SqliteCommand(SqlQueries.UpdateBuyerInvoicedIdByUsername, connection);
+			var command = new NpgsqlCommand(SqlQueries.UpdateBuyerInvoicedIdByUsername, connection);
 			
 			command.Parameters.AddWithValue("@Username", username);
 			command.Parameters.AddWithValue("@InvoiceId", invoice.InvoiceId);
 			command.ExecuteNonQuery();
 		}
 
-		private CryptoPay.Types.Invoice GetInvoice(SqliteConnection connection, Update update)
+		private CryptoPay.Types.Invoice GetInvoice(NpgsqlConnection connection, Update update)
 		{
-			var command = new SqliteCommand(SqlQueries.SelectInvoiceIdByUsername, connection);
+			var command = new NpgsqlCommand(SqlQueries.SelectInvoiceIdByUsername, connection);
 			command.Parameters.AddWithValue("@Username", update.CallbackQuery.From.Username);
 
 			var invoiceId = command.ExecuteScalar() ?? throw new ArgumentNullException();
@@ -278,9 +279,9 @@ namespace TelegramBotLibrary.Handlers
 				?? throw new ArgumentNullException();
 		}
 
-		private string GetChannelUrl(SqliteConnection connection, Update update)
+		private string GetChannelUrl(NpgsqlConnection connection, Update update)
 		{
-			var command = new SqliteCommand(SqlQueries.SelectChannelUrl, connection);
+			var command = new NpgsqlCommand(SqlQueries.SelectChannelUrl, connection);
 			command.Parameters.AddWithValue("@Username", update.CallbackQuery.From.Username);
 
 			return command.ExecuteScalar().ToString() ?? throw new ArgumentNullException();

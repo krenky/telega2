@@ -15,10 +15,12 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            var pathDb = "/" + Path.Combine("home", "keykm","usersdata.db");
-            Console.WriteLine(pathDb);
-            Console.WriteLine(args[0]);
-            ITelegramBotClient bot = new TelegramBotClient(token: args[0]);
+            var connectionString = "Host=localhost;Port=5432;Database=pornStore;Username=postgres;Password=зpostgres;";
+
+			//var pathDb = "/" + Path.Combine("home", "keykm","usersdata.db");
+            //Console.WriteLine(pathDb);
+            //Console.WriteLine(args[0]);
+            ITelegramBotClient bot = new TelegramBotClient("7015770120:AAEmoCrQUK0p3JNcTYKZufVd6moFLbCYbzA");
 
 var buyButton = new ReplyKeyboardMarkup(new KeyboardButton("Купить"));
 buyButton.ResizeKeyboard = true;
@@ -66,8 +68,8 @@ new TextAnswerMessage("Sergay"),
 }),
             new SendHandler(),
             new EditMessageHandler(),
-            new CryptoPayClient(args[1]),
-           $@"data source = {pathDb}");
+            new CryptoPayClient("168281:AALGMXN9Kn6oMQ8967JTQJFZXCX4PiAEVaQ"),
+		    connectionString);
             TelegramBot botic = new TelegramBot(bot, _updateHandler);
             botic.Start();
         }
